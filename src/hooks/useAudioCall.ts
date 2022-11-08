@@ -26,10 +26,8 @@ function useAudioCall(callRef: React.RefObject<HTMLAudioElement>) {
         setOnCall(false);
         if (!callRef.current) return;
         callRef.current.pause();
-        console.log('1');
         stream.getTracks().forEach((track) => {
           track.stop();
-          console.log('1 in');
         });
       });
     });
@@ -54,9 +52,7 @@ function useAudioCall(callRef: React.RefObject<HTMLAudioElement>) {
             setOnCall(false);
             if (!callRef.current) return;
             callRef.current.pause();
-            console.log('2');
             stream.getTracks().forEach((track) => {
-              console.log('2 in');
               track.stop();
             });
           });
