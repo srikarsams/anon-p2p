@@ -1,17 +1,15 @@
 import { useRef } from 'react';
-import { useAudioCall } from '../hooks/useAudioCall';
 
+import { useAudioCall } from '../hooks/useAudioCall';
 import { usePeerState } from '../state/peerState';
 
 import { Button } from './Button';
 
+import { APP_URL, REMOTE_PEER_QUERY_PARAM } from '../utils/constants';
+
 export function SideBar() {
   const id = usePeerState((state) => state.id);
   const isConnected = usePeerState((state) => state.isConnected);
-  const remotePeerId = usePeerState((state) => state.remotePeerId);
-  const setRemotePeerId = usePeerState((state) => state.setRemotePeerId);
-  const peer = usePeerState((state) => state.peer);
-  const setConnection = usePeerState((state) => state.setConnection);
   const connection = usePeerState((state) => state.connection);
   const callConnection = usePeerState((state) => state.callConnection);
   const onCall = usePeerState((state) => state.onCall);
@@ -21,7 +19,9 @@ export function SideBar() {
 
   function copyId() {
     try {
-      navigator.clipboard.writeText(id);
+      navigator.clipboard.writeText(
+        `${APP_URL}?${REMOTE_PEER_QUERY_PARAM}=${id}`
+      );
     } catch (error) {
       console.log(error);
     }
@@ -39,28 +39,7 @@ export function SideBar() {
             Hi {id.substring(0, 6)}...
           </h1>
           <Button className="bg-gray-500 text-white" onClick={copyId}>
-            Copy peer ID
-          </Button>
-        </div>
-
-        <div className="flex gap-2">
-          <input
-            className="border border-gray-800 w-full rounded-sm p-1 text-md flex-grow disabled:cursor-not-allowed"
-            type="text"
-            placeholder="Input peer ID"
-            value={remotePeerId}
-            onChange={(e) => setRemotePeerId(e.target.value)}
-            disabled={isConnected}
-          />
-          <Button
-            className="bg-blue-500 text-white disabled:bg-gray-500 disabled:cursor-not-allowed"
-            isDisabled={isConnected}
-            onClick={() => {
-              const conn = peer.connect(remotePeerId);
-              setConnection(conn);
-            }}
-          >
-            Connect
+            Copy URL
           </Button>
         </div>
       </div>

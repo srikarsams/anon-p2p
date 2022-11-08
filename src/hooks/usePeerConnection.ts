@@ -3,9 +3,12 @@ import { useEffect } from 'react';
 
 import { usePeerState } from '../state/peerState';
 
+import { REMOTE_PEER_QUERY_PARAM } from '../utils/constants';
+
 function usePeerConnection(notificationRef: React.RefObject<HTMLAudioElement>) {
   const setPeer = usePeerState((state) => state.setPeer);
   const peer = usePeerState((state) => state.peer);
+  const id = usePeerState((state) => state.id);
   const setId = usePeerState((state) => state.setId);
   const setRemotePeerId = usePeerState((state) => state.setRemotePeerId);
   const setIsConnected = usePeerState((state) => state.setIsConnected);
@@ -14,12 +17,29 @@ function usePeerConnection(notificationRef: React.RefObject<HTMLAudioElement>) {
   const setMessages = usePeerState((state) => state.setMessages);
   const setOnCall = usePeerState((state) => state.setOnCall);
 
+  /* 
+    - Generates new Peer.
+    - Adds open and connection listeners
+    - Also once the peer is generated, it checks for
+      remote peer query param existence. If yes, initiates
+      a connection with remote peer automatically. Then resets
+      the URL back to normal by removing rpid param.
+  */
   useEffect(() => {
     if (Object.keys(peer).length === 0) {
       setPeer(new Peer());
-    } else {
+    } else if (!id) {
       peer.on('open', (id) => {
         setId(id);
+
+        // Looks for rpid and then establishes connection.
+        const searchParams = new URLSearchParams(location.search);
+        const rpid = searchParams.get(REMOTE_PEER_QUERY_PARAM);
+        if (rpid) {
+          const remoteConnection = peer.connect(rpid);
+          setConnection(remoteConnection);
+          setRemotePeerId(rpid);
+        }
       });
 
       peer.on('connection', function (conn) {
@@ -28,8 +48,12 @@ function usePeerConnection(notificationRef: React.RefObject<HTMLAudioElement>) {
         setIsConnected(true);
       });
     }
-  }, [peer]);
+  }, [peer, id]);
 
+  /* 
+    Once the connection gets generated (either own or by others),
+    adds data and close listeners for receiving messages
+  */
   useEffect(() => {
     if (Object.keys(connection).length > 0) {
       connection.on('open', () => {
