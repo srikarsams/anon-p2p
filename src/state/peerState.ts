@@ -22,7 +22,7 @@ type PeerState = {
   callConnection: MediaConnection;
   setCallConnection: (callConnection: MediaConnection) => void;
   onCall: boolean;
-  setOnCall: (onAudioCall: boolean) => void;
+  setOnCall: (onCall: boolean) => void;
 };
 
 const usePeerState = create<PeerState>((set) => ({
