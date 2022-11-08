@@ -28,7 +28,7 @@ export function SideBar() {
   }
 
   return (
-    <div className="w-full p-2 border border-gray-800 rounded md:w-1/3 flex flex-col justify-between md:h-3/4">
+    <div className="w-full p-2 border border-gray-800 rounded md:w-1/3 flex flex-col justify-between">
       <audio className="hidden" ref={callRef}></audio>
       <div className="mb-8 md:mb-0">
         <div className="flex gap-2 justify-between items-center mb-8">
