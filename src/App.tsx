@@ -15,12 +15,14 @@ function App() {
   const peerId = usePeerState((state) => state.id);
 
   return (
-    <div className="flex flex-col gap-3 py-3 px-5 md:py-12 md:max-w-screen-md md:flex-row mx-auto md:h-screen">
+    <div className="flex flex-row py-3 px-5 md:py-12 md:h-screen md:items-center">
       <audio className="hidden" ref={notificationRef}>
         <source src={tone} type="audio/mpeg" />
       </audio>
-      <SideBar />
-      <Main />
+      <div className="flex flex-col gap-3 md:h-3/4 md:max-h-[700px] md:flex-row md:max-w-screen-md md:w-full mx-auto">
+        <SideBar />
+        <Main />
+      </div>
       {peerId === '' ? <Loader>Generating ID...</Loader> : null}
     </div>
   );
