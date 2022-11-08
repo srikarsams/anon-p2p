@@ -24,7 +24,6 @@ function usePeerConnection(notificationRef: React.RefObject<HTMLAudioElement>) {
       remote peer query param existence. If yes, initiates
       a connection with remote peer automatically. Then resets
       the URL back to normal by removing rpid param.
-    - Closes the connection on tab close
   */
   useEffect(() => {
     if (Object.keys(peer).length === 0) {
@@ -47,22 +46,23 @@ function usePeerConnection(notificationRef: React.RefObject<HTMLAudioElement>) {
         setConnection(conn);
         setRemotePeerId(conn.peer);
         setIsConnected(true);
-
-        window.addEventListener('beforeunload', () => {
-          conn.close();
-        });
       });
     }
   }, [peer, id]);
 
   /* 
-    Once the connection gets generated (either own or by others),
-    adds data and close listeners for receiving messages
+    - Once the connection gets generated (either own or by others),
+      adds data and close listeners for receiving messages
+    - Closes the connection on tab close
   */
   useEffect(() => {
     if (Object.keys(connection).length > 0) {
       connection.on('open', () => {
         setIsConnected(true);
+
+        window.addEventListener('beforeunload', () => {
+          connection.close();
+        });
 
         connection.on('data', function (message) {
           setMessages({
