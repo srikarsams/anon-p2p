@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
 import { usePeerState } from '../state/peerState';
@@ -14,14 +15,13 @@ export function Chat() {
   return (
     <div className="flex flex-col flex-1 min-h-0">
       <div className="flex-1 p-2 overflow-y-auto flex flex-col-reverse gap-3 min-h-0">
-        {messages.map((message) => {
+        {messages.map(({ type, body, id }) => {
           return (
             <Message
-              className={
-                message.type === 'received' ? 'self-start' : 'self-end'
-              }
+              className={type === 'received' ? 'self-start' : 'self-end'}
+              key={id}
             >
-              {message.body}
+              {body}
             </Message>
           );
         })}
@@ -43,6 +43,7 @@ export function Chat() {
             setMessages({
               body: text,
               type: 'sent',
+              id: nanoid(),
             });
           }}
         >

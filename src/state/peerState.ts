@@ -4,6 +4,7 @@ import create from 'zustand';
 type Message = {
   body: string;
   type: 'sent' | 'received';
+  id: string;
 };
 
 type PeerState = {

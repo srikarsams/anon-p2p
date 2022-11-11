@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import Peer from 'peerjs';
 import { useEffect } from 'react';
 
@@ -68,6 +69,7 @@ function usePeerConnection(notificationRef: React.RefObject<HTMLAudioElement>) {
           setMessages({
             body: message as string,
             type: 'received',
+            id: nanoid(),
           });
           notificationRef?.current?.play();
         });
